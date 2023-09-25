@@ -5,6 +5,7 @@ const fetch = require("node-fetch");
 
 const namespace = "amqp"; // default namespace
 const url = "amqp://username:password@localhost:5672";
+
 makeWorker({
   name: "gd.docs",
   task: ({ appNo }) => ({ s3_path: `${appNo}.xxx.pdf` }),
@@ -22,8 +23,8 @@ makeWorker({
       .then((r) => r.json())
       .then((r) =>
         console.log(
-          "running",
-          r.reduce((m, { name, state }) => {
+          "available",
+          r.reduce((m, { name }) => {
             if (name.startsWith(`${namespace}.`)) m.push(name);
             return m;
           }, [])
