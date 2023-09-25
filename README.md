@@ -17,13 +17,11 @@ makeWorker({
     const toBase64 = (text) => Buffer.from(text).toString("base64");
     fetch(mgmt_list_queues, {
       headers: { Authorization: `Basic ${toBase64("username:password")}` },
-      method: "GET",
-      redirect: "follow",
     })
       .then((r) => r.json())
       .then((r) =>
         console.log(
-          "available",
+          `available under ${namespace}`,
           r.reduce((m, { name }) => {
             if (name.startsWith(`${namespace}.`)) m.push(name);
             return m;
