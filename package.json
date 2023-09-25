@@ -1,0 +1,29 @@
+{
+  "author": "linto.cet@gmail.com",
+  "bugs": {
+    "url": "https://github.com/ClayIP/amqp-workflow/issues"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "uuid": "^9.0.1"
+  },
+  "description": "amqp-workflow",
+  "devDependencies": {},
+  "homepage": "https://github.com/ClayIP/amqp-workflow#README",
+  "keywords": [
+    "amqp",
+    "workflow"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "name": "amqp-workflow",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ClayIP/amqp-workflow.git"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "type": "commonjs",
+  "version": "1.0.0"
+}
