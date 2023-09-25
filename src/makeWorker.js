@@ -16,6 +16,7 @@ const makeWorker = (options = {}) => {
     namespace = "amqp",
     onClose,
     onError,
+    prefetch = 1,
     task,
     url,
   } = {
@@ -40,7 +41,7 @@ const makeWorker = (options = {}) => {
 
     channel = await connection.createChannel();
     await channel.assertQueue(_name, { expires, maxPriority });
-    channel.prefetch(1);
+    channel.prefetch(prefetch);
     channel.consume(_name, taskRunner(channel, task));
   };
 
