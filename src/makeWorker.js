@@ -41,7 +41,7 @@ const makeWorker = (options = {}) => {
 
     channel = await connection.createChannel();
     await channel.assertQueue(_name, { expires, maxPriority });
-    channel.prefetch(prefetch);
+    await channel.prefetch(prefetch);
     channel.consume(_name, taskRunner(channel, task));
   };
 
