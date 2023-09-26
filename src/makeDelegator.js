@@ -1,4 +1,5 @@
 const amqp = require("amqplib");
+const emitter = require("events");
 const { v4 } = require("uuid");
 
 const defaults = require("./defaults.js");
@@ -7,10 +8,12 @@ const invoker = require("./utils/invoker.js");
 
 const makeDelegator = (options = {}) => {
   const {
+    expires = 300000,
     namespace = "amqp",
-    url,
     onClose,
     onError,
+    replyTo = v4(),
+    url,
   } = { ...defaults, ...options };
 
   let connection;
@@ -24,16 +27,26 @@ const makeDelegator = (options = {}) => {
     if (typeof onError === "function") connection.on("error", onError);
 
     channel = await connection.createChannel();
+    await channel.assertQueue(replyTo, { expires });
+    channel.responseEmitter = new emitter();
+    channel.responseEmitter.setMaxListeners(0);
+    channel.consume(
+      replyTo,
+      (message) => {
+        channel.responseEmitter.emit(
+          message.properties.correlationId,
+          JSON.parse(message.content.toString())
+        );
+      },
+      { noAck: true }
+    );
   };
 
   const invoke = async (name, args, options) => {
     if (!channel) throw new Error(DELEGATOR_NOT_STARTED);
 
-    const { queue } = await channel.assertQueue("", { exclusive: true });
-    const invocation = invoker(channel, queue, v4());
-    const r = await invocation(`${namespace}.${name}`, args, options);
-    await channel.deleteQueue(queue);
-    return r;
+    const invocation = invoker(channel, replyTo, v4());
+    return await invocation(`${namespace}.${name}`, args, options);
   };
 
   const stop = async () => {
