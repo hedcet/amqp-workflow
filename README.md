@@ -1,5 +1,5 @@
 insipred from [amqp-delegate](https://itnext.io/delegating-work-using-nodejs-and-amqp-4d3cc1f62824)
-> this will setup queue based on config
+> this will setup queue based on [config](https://github.com/hedcet/amqp-workflow/blob/master/src/makeWorker.js#L12)
 ```
 const { makeWorker, makeDelegator } = require("amqp-workflow");
 const fetch = require("node-fetch");
